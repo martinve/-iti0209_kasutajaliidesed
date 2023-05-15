@@ -1,0 +1,11 @@
+{
+  "data": [
+    {"category": "Shirts", "sales_total": 10000},
+    {"category": "Shorts", "sales_total": 12000},
+    {"category": "Skirts", "sales_total": 400},
+    {"category": "Pants", "sales_total":  21000},
+    {"category": "Jeans", "sales_total": 13500},
+    {"category": "Hoodies", "sales_total": 7000},
+    {"category": "Scarves", "sales_total": 11000}
+  ]
+}

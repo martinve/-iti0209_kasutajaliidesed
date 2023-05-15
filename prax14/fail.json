@@ -1,0 +1,16 @@
+{
+  "data": [
+    {
+      "name": "Mati",
+      "balance": "500"
+    },
+    {
+      "name": "Kati",
+      "balance": "50000"
+    },
+    {
+      "name": "Juta",
+      "balance": "45000"
+    }
+  ]
+}

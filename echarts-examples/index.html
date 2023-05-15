@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Katsetame Echarts-iga</title>
+    <style>
+        .chart {
+            width: 300px;
+            height: 250px;
+            border: 1px dotted red;
+            display: inline-block;
+        }
+    </style>
+</head>
+<body>
+
+<h1>Katsetame E-charts'i</h1>
+
+<div id="chart" class="chart"></div>
+<div id="c0" class="chart"></div>
+<div id="c1" class="chart"></div>
+
+<script src="https://cdn.jsdelivr.net/npm/echarts@5.3.2/dist/echarts.min.js"></script>
+<script>
+    let container = document.getElementById('chart');
+    let myChart = echarts.init(container);
+
+    let chart0 = echarts.init(document.getElementById("c0"));
+    let chart1 = echarts.init(document.getElementById("c1"));
+
+    let option = {
+        title: {
+            text: "My first bar chart"
+        },
+        grid: {
+            containLabel: true
+        },
+        yAxis: {
+            type: 'category',
+            data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+            axisLabel: {
+                    interval: 0
+                }
+        },
+        xAxis: {
+            type: 'value'
+        },
+        series: [{
+            data: null,
+            type: "line"
+        }]
+    };
+
+    let option0 = JSON.parse(JSON.stringify(option));
+    let option1 = JSON.parse(JSON.stringify(option));
+    /* let option1 = Object.assign({}, option); */
+    /* let option1 = { ...option }; */
+
+    option0.title.text = "My second chart";
+    option1.title.text = "My third chart";
+
+    // Display the chart using the configuration items and data just specified.
+    myChart.setOption(option);
+    chart0.setOption(option0);
+
+
+    fetch("sales.json")
+        .then(response => response.json())
+        .then(json => {
+            console.log(json.data)
+
+            let data = json.data;
+            let labels = [];
+            let values = [];
+
+            data.forEach(item => {
+                labels.push(item.category);
+                values.push(Math.floor(item.sales_total / 30) * 0.1);
+            });
+            option1.yAxis.data = labels;
+
+
+            option1.series = [];
+            option1.series = [{
+                data: values,
+                type: "bar"
+            }];
+
+            let loaded = {
+                 data: data,
+                 type: "line"
+            }
+            option1.series.push(loaded);
+            chart1.setOption(option1);
+        })
+        .catch(error => console.error(error))
+
+
+    fetch("sales-list.json")
+        .then(response => response.json())
+        .then(json => {
+            console.log("Fetching sales list")
+            console.log(json.data)
+
+            let data = json.data;
+            let labels = [];
+            let values = [];
+
+            //TODO: Siin peaks sortima
+
+
+            data.forEach(item => {
+                labels.push(item.category);
+                values.push(item.sales_total);
+            });
+            option.yAxis.data = labels;
+            option0.yAxis.data = labels;
+
+
+            option1.series = [];
+            option1.series = [{
+                data: values,
+                type: "bar"
+            }];
+
+            option.series.push(values);
+            option0.series.push(values);
+
+            myChart.setOption(option1);
+            chart0.setOption(option1);
+        })
+        .catch(error => console.error(error))
+
+
+
+
+</script>
+</body>
+</html>

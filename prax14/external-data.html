@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Data Echart Visualization Examples: Basic Example</title>
+    <script src="https://cdn.jsdelivr.net/npm/echarts@5.1.1/dist/echarts.min.js"></script>
+    <link rel="stylesheet" href="assets/css/style.css">
+
+    <style>
+        #chart, .chart {
+            width: 600px;
+            height: 50vh;
+        }
+    </style>
+
+</head>
+
+<body>
+
+    <div id="chart"></div>
+    <div id="chart1" class="chart"></div>
+
+
+    <script>
+
+        // At first we set generic options for chart before data is loaded
+        let options = {
+            title: {
+                text: 'Loading0',
+                subtext: "The Chiffon shirts are the most popular item"
+            },
+            grid: {
+                containLabel: true
+            },
+
+            tooltip: {},
+
+            yAxis: {
+                data: [],
+                type: 'category',
+                axisLabel: {
+                    interval: 0
+                }
+            },
+            xAxis: {},
+
+            series: [{
+                data: null,
+                name: 'Sales',
+                type: 'bar'
+            }]
+        };
+
+        let labels = [];
+        let values = [];
+
+        fetch("fail.json")
+            .then(res => res.json())
+            .then(json => {
+                //Siin teeme midagi
+                let c = echarts.init(document.getElementById("chart1"));
+
+
+
+                let data = json.data
+
+                data.sort(function(a,b) {
+                    return a.balance - b.balance;
+                });
+
+
+
+                data.forEach(item => {
+                    labels.push( item.name );
+                    values.push( item.balance );
+                });
+
+                console.log("opt", options)
+
+                let options1 = JSON.parse(JSON.stringify(options));
+                options1.yAxis.data = labels;
+                options1.series[0].data = values;
+                options1.series[0].type= "line"
+                options1.title.text = "Savings of men and women."
+                options1.title.subtext = "Women have over 10x more $ in savings than men."
+
+                c.setOption(options1);
+            })
+            .catch(err => console.error(err))
+
+
+        //To load a data from file, the page should run on server - the when run from e.g. file:///C:/dev/index.html it does not work.
+        //Either run a local server - even IntelliJ has one built in, or upload data files to Dijkstra
+        fetch("sales.json")
+            .then(response => response.json())
+            .then(json => {
+
+                let data = json.data;
+                let labels = [];
+                let values = [];
+
+                // Here we sort the data by labels. It could have been done on API level
+                data.sort(function(a,b) {
+                    return b.value - a.value;
+                });
+
+
+                data.forEach(item => {
+                    labels.push( item.name );
+                    values.push( item.value );
+                });
+
+                options.yAxis.data = labels;
+                options.series[0].data = values;
+                options.title.text = "Sales of Clothing Items."
+
+                chart.setOption(options);
+
+            })
+            .catch(error => console.log(error));
+
+
+        let chart = echarts.init( document.getElementById("chart") );
+        chart.setOption(options);
+
+          window.addEventListener('resize', function() {
+            chart.resize();
+        ``});
+
+    </script>
+
+</body>
+
+</html>
